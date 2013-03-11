@@ -22,7 +22,6 @@ class PhotontisticsDatabase():
 
 
 	def initDB(self):
-		print 'PhotontisticsDatabase::initDB'
 		c = self.db_conn.cursor()
 		try:
 			c.execute('''CREATE TABLE "photo" (
@@ -43,8 +42,6 @@ class PhotontisticsDatabase():
 
 
 	def loadPhoto(self, photo):
-		print 'PhotontisticsDatabase::loadPhoto'
-
 		c = self.db_conn.cursor()
 		c.execute("SELECT * FROM photo WHERE filename=?", [photo.filename])
 
@@ -53,9 +50,7 @@ class PhotontisticsDatabase():
 
 
 	def addPhoto(self, photo):
-		print 'PhotontisticsDatabase::addPhoto'
 		if self.loadPhoto(photo):
-			print 'PhotontisticsDatabase::addPhoto::added_already'
 			return
 
 		attributes = {"filename": photo.filename,
@@ -86,8 +81,6 @@ class PhotontisticsDatabase():
 		return c.lastrowid
 
 	def updatePhoto(self, photo):
-		print 'PhotontisticsDatabase::updatePhoto'
-
 		attributes = {"id": photo.photo_id,
 				"filename": photo.filename,
 				"iso":            photo.iso,

@@ -44,11 +44,7 @@ class Photo():
 			self.flash = data['flash']
 
 
-	def loadExifData(self):
-		print 'loadExifData'
-
 	def setFileName(self, local_filename):
-		print 'Photo::setFileName to ' + local_filename
 		self.filename = local_filename
 		# fp = open(self.filename, 'r')
 		# self.sha1 = hashlib.sha1(fp.read()).hexdigest()
@@ -61,7 +57,7 @@ class Photo():
 				decoded = TAGS.get(tag, tag)
 				if decoded == 'FNumber':
 					(enumerator, denominator) = value
-					self.fnumber = str(enumerator/denominator)
+					self.fnumber = str(float(enumerator)/denominator)
 
 				elif decoded == 'ExposureTime':
 					(unit, fraction) = value
@@ -69,7 +65,7 @@ class Photo():
 
 				elif decoded == 'FocalLength':
 					(enumerator, denominator) = value
-					self.focal_length= str(enumerator/denominator)
+					self.focal_length= str(float(enumerator)/denominator)
 
 				elif decoded == 'ISOSpeedRatings':
 					self.iso = str(value)
@@ -81,12 +77,10 @@ class Photo():
 
 
 	def create(self):
-		print 'create'
 		p_id = DB.addPhoto(self)
 
 
 	def update(self):
-		print 'create'
 		p_id = DB.updatePhoto(self)
 
 
@@ -104,6 +98,7 @@ def get_all_photo_paths():
 
 
 def add_photos_to_db(db):
+	print 'Adding pictures to database'
 	for photo_path in get_all_photo_paths():
 		p = Photo()
 		p.setFileName(photo_path)
@@ -111,9 +106,9 @@ def add_photos_to_db(db):
 
 
 def proc_exif_for_db_pics(db):
+	print 'Processing EXIF'
 	for p in db.getAllPhotos():
 		photo = Photo(p)
-
 		photo.procExifData()
 
 
@@ -137,6 +132,11 @@ def main():
 		add_photos_to_db(db)
 
 	elif (sys.argv[1] == 'proc_exif'):
+		proc_exif_for_db_pics(db)
+
+	elif (sys.argv[1] == 'do_all'):
+		db.initDB()
+		add_photos_to_db(db)
 		proc_exif_for_db_pics(db)
 
 	else:
